@@ -1,0 +1,70 @@
+name: Auto-Grade Assignments
+
+on:
+  push:
+    branches:
+      - main  
+  pull_request:
+
+permissions:
+  pull-requests: write
+
+jobs:
+  grade:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Student Repository
+        uses: actions/checkout@v3
+
+      - name: 🔄 Clone Autograder Files
+        uses: actions/checkout@v3
+        with:
+          repository: cs248/course-autograder-1
+          token: ${{ secrets.AUTOGRADER_PAT }}  
+          path: autograder  
+
+      - name: 🏗 Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: 📦 Install dependencies
+        run: |
+          pip install -r autograder/requirements.txt  # Use dependencies from autograder repo
+
+      - name: 🔄 Run nbgrader on Student Submission
+        run: |
+          cp -r autograder/* cs248/  # Copy autograder files to grading directory
+          cd cs248
+          nbgrader autograde "ps1" --force
+
+      - name: 📊 Extract Scores and Errors
+        run: |
+          cd cs248
+          nbgrader export --assignment="ps1"
+          echo "## Scores" > grade_report.md
+          tail -n +2 grades.csv | awk -F',' '{print "score: " $8 " / " $11}' >> grade_report.md
+
+          # Capture which cells failed
+          echo "" >> grade_report.md
+          echo "## Errors" >> grade_report.md
+          grep -A 2 "traceback" autograded/ps1/*.ipynb >> grade_report.md || echo "No errors!" >> grade_report.md
+
+      - name: 📝 Read Grade Report into ENV Variable
+        id: read_report
+        run: |
+          echo "GRADE_REPORT<<EOF" >> $GITHUB_ENV
+          cat cs248/grade_report.md >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: 📝 Comment PR with Grade
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          message: |
+            ✅ **Grading Complete!**
+            - Your assignment has been graded.
+
+            ${{ env.GRADE_REPORT }}
+          mode: upsert
+          create_if_not_exists: true
