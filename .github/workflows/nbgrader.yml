@@ -16,9 +16,6 @@ jobs:
     steps:
       - name: 📥 Checkout Student Repository
         uses: actions/checkout@v3
-        with:
-          repository: Wellesley-CS248/test123
-          token: ${{ secrets.AUTOGRADER_PAT }}
 
       - name: 🔄 Clone Autograder Files
         uses: actions/checkout@v3
