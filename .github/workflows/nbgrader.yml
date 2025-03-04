@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: 📥 Checkout Student Repository
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 🔄 Clone Autograder Files
         uses: actions/checkout@v3
