@@ -58,13 +58,15 @@ jobs:
           cat cs248/grade_report.md >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
-      - name: 📝 Comment PR with Grade
-        uses: thollander/actions-comment-pull-request@v2
+      - name: 🔄 Open Pull Request with Grades
+        uses: peter-evans/create-pull-request@v5
         with:
-          message: |
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: grading-results
+          title: "📊 Grading Results for ps1"
+          body: |
             ✅ **Grading Complete!**
-            - Your assignment has been graded.
-
-            ${{ env.GRADE_REPORT }}
-          mode: upsert
-          create_if_not_exists: true
+            - Your assignment **ps1** has been graded.
+            - See `grade_report.md` for details.
+          labels: grading, automated
+          base: main
