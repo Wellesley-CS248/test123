@@ -17,6 +17,7 @@ jobs:
       - name: 📥 Checkout Student Repository
         uses: actions/checkout@v3
         with:
+          repository: Wellesley-CS248/test123
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 🔄 Clone Autograder Files
