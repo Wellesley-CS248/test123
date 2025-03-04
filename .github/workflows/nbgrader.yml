@@ -35,7 +35,7 @@ jobs:
 
       - name: 🔄 Run nbgrader on Student Submission
         run: |
-          cp -r autograder/* cs248/  # Copy autograder files to grading directory
+          cp -r autograder/cs248/* cs248/  # Copy autograder files to grading directory
           cd cs248
           nbgrader autograde "ps1" --force
 
