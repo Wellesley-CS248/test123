@@ -62,7 +62,7 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: grading-results
+          branch: main
           title: "📊 Grading Results for ps1"
           body: |
             ✅ **Grading Complete!**
