@@ -58,11 +58,21 @@ jobs:
           cat cs248/grade_report.md >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
+      - name: 📝 Commit Grade Report
+        run: |
+          git config --global user.name "GitHub Classroom Bot"
+          git config --global user.email "classroom-bot@users.noreply.github.com"
+          git checkout -b grading-results  
+          mv cs248/grade_report.md .  
+          git add grade_report.md
+          git commit -m "🔍 Auto-Graded: Added grade report for ps1"
+          git push origin grading-results
+
       - name: 🔄 Open Pull Request with Grades
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main
+          branch: grading-result
           title: "📊 Grading Results for ps1"
           body: |
             ✅ **Grading Complete!**
