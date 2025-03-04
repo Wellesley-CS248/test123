@@ -20,7 +20,7 @@ jobs:
       - name: 🔄 Clone Autograder Files
         uses: actions/checkout@v3
         with:
-          repository: cs248/course-autograder-1
+          repository: bellesea/private_grading
           token: ${{ secrets.AUTOGRADER_PAT }}  
           path: autograder  
 
